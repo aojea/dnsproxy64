@@ -59,7 +59,7 @@ func (b *mockBackend) close() {
 
 func (b *mockBackend) udpLoop() {
 	defer b.wg.Done()
-	buf := make([]byte, 65535)
+	buf := make([]byte, maxUDPPacketSize)
 	for {
 		n, addr, err := b.udpConn.ReadFromUDP(buf)
 		if err != nil {

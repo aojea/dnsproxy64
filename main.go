@@ -20,6 +20,7 @@ const (
 	defaultBackendAddr = "127.0.0.11:12345"
 	defaultUDPTTL      = 5 * time.Second
 	defaultGCInterval  = 2 * time.Second
+	maxUDPPacketSize   = 65535
 )
 
 type udpState struct {
@@ -114,7 +115,7 @@ func (p *proxy) shutdown() {
 func (p *proxy) udpClientReadLoop() {
 	defer p.wg.Done()
 
-	buf := make([]byte, 65535)
+	buf := make([]byte, maxUDPPacketSize)
 	for {
 		n, clientAddr, err := p.udpConn.ReadFromUDP(buf)
 		if err != nil {
@@ -145,7 +146,7 @@ func (p *proxy) udpClientReadLoop() {
 func (p *proxy) udpBackendReadLoop() {
 	defer p.wg.Done()
 
-	buf := make([]byte, 65535)
+	buf := make([]byte, maxUDPPacketSize)
 	for {
 		n, err := p.udpBackend.Read(buf)
 		if err != nil {
